@@ -1,0 +1,7 @@
+less语法
+http://www.zhufengpeixun.com/qianduanjishuziliao/CSS3heHTML5zhuanti/2016-07-22/527.html
+http://www.zhufengpeixun.com/qianduanjishuziliao/CSS3heHTML5zhuanti/2016-07-22/528.html
+http://www.zhufengpeixun.com/qianduanjishuziliao/CSS3heHTML5zhuanti/2016-08-29/606.html
+
+less中有些css代码接卸不了，则避开这行代码，不要去解析还是当成css代码即可。
+例如 : filter:~“alpha(opacity=@{result})”，直接解析变量

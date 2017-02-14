@@ -1,0 +1,60 @@
+@import (reference)"public"; /*导入的less不解析到这个文件中显示，只会在需要是，调用里面的变量和方法*/
+
+html, body {
+  height: 100%;
+  background: #f4f4f4;
+  //overflow: hidden;
+}
+
+.headerWrap {
+  height: 64px;
+  background: @color-white;
+  .header {
+    width: 1040px;
+    margin: 0 auto;
+    h1 {
+      float: left;
+      padding-right:60px;
+      img {
+        margin-top: unit((64-35)/2, px);
+      }
+    }
+    nav {
+      float: left;
+      a {
+        //display: block;
+        float: left;/*浮动以后，已经成立块级元素*/
+        width: 90px;
+        height:56px;
+        line-height:56px;
+        font-size:16px; /*是否可以不写*/
+        text-align: center;
+        border-top:4px solid transparent;
+        border-bottom:4px solid transparent;
+        color:@color-gray;
+        &:hover:not(:nth-child(5)):not(:last-child){
+          border-top-color:@color-blue;
+        }
+        &:first-child{
+          background:@color-blue;
+          color:@color-white;
+        }
+        &:last-child>img{
+          width:64px;
+        }
+      }
+    }
+    .login {
+      float: right;
+      width:46px;
+      height:28px;
+      line-height:28px;
+      font-size:14px;
+      text-align: center;
+      border-radius: 5px;
+      margin-top:unit((64-28)/2,px);
+      background:@color-blue;
+      color:@color-white;
+    }
+  }
+}

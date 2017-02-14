@@ -1,0 +1,36 @@
+@color-gray:#555;
+@color-border:#ddd;
+@color-blue:#346AFF;
+@color-blue-lite:#EFF3FF;
+@color-white:#fff;
+@url:"../img";
+
+.transition(@property:all,@duration:1s,@timing-function:ease,@delay:0s){
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -ms-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+
+.pos(@pos:absolute,@left:auto,@right:auto,@top:auto,@bottom:auto,@zIndex:1){
+  position: @pos;
+  left: @left;
+  right: @right;
+  top:@top ;
+  bottom: @bottom;
+  z-index: @zIndex;
+}
+.opacity(@val:1){
+  @result:@val*100;
+  opacity: @val;
+  filter: ~"alpha(opacity = @{result})";
+}
+
+.css3(@k,@v){//@k指属性名 @v指属性值
+  -webkit-@{k}:@v;
+  -moz-@{k}:@v;
+  -ms-@{k}:@v;
+  -o-@{k}:@v;
+    @{k}:@v;
+}

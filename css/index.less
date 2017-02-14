@@ -1,0 +1,206 @@
+@import (reference) "public"; /*public里的less不会在css输出*/
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #f4f4f4;
+  overflow: hidden;
+}
+
+.headerWrap {
+  width: 100%;
+  height: 64px;
+  background: @color-white;
+  .header {
+    width: 1040px;
+    height: 100%;
+    margin: 0 auto;
+    h1 {
+      float: left;
+      padding-right: 60px;
+      img {
+        display: block;
+        margin-top: unit((64-35)/2, px);
+      }
+    }
+    nav {
+      float: left;
+      a {
+        float: left;
+        width: 90px;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        height: 56px;
+        line-height: 56px;
+        font-size: 16px;
+        color: @color-gray;
+        text-align: center;
+        &:hover:not(:nth-child(5)):not(:last-child) { /*&指父级*/
+          border-top-color: @color-blue;
+        }
+        &:first-child {
+          background: @color-blue;
+          border-top-color: @color-blue;
+          border-bottom-color: @color-blue;
+          color: @color-white;
+        }
+        &:last-child > img {
+          width: 64px;
+          height: 64px;
+        }
+      }
+    }
+    .login {
+      float: right;
+      width: 46px;
+      height: 28px;
+      line-height: 28px;
+      background: @color-blue;
+      color: @color-white;
+      margin-top: unit((64-28)/2, px);
+      font-size: 14px;
+      text-align: center;
+      border-radius: 5px;
+    }
+  }
+}
+
+.download {
+  position: relative;
+  .down {
+    .pos(@left:-15px,@top:60px,@zIndex: 111);
+    width: 90px;
+    height: 0px;
+    padding: 0 15px;
+    overflow: hidden;
+    .transition(@duration: 0.5s);
+    img {
+      display: block;
+      /*去除图片下边的间隙*/
+    }
+    p {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+  }
+  .downBg {
+    .down;
+    //.pos(@left:-15px,@top:60px,@zIndex: 0);
+    z-index: 0;
+    background: #fff;
+    .opacity(0.6);
+  }
+  &:hover {
+    .down, .downBg {
+      height: 130px;
+      padding: 10px 15px;
+    }
+  }
+}
+
+/*mian区域*/
+.main {
+  margin: 20px 0;
+  width: 1040px;
+  .menu {
+    float:left;
+    width: 200px;
+    border: 1px solid @color-border;
+    background: @color-white;
+    overflow: hidden;
+    ul {
+      a {
+        position: relative;
+        display: block;
+        height: 50px;
+        line-height: 50px;
+        font-size: 16px;
+        border-left: 5px solid transparent;
+        padding-left: 24px;
+        &:hover,&.bg{
+          border-left-color: @color-blue;
+          background: @color-blue-lite;
+          color: @color-blue;
+          i{
+            .pos(@right:20px,@top:50%);
+            width: 5px;
+            height:5px;
+            margin-top:-5px;
+            border-top:2px solid @color-blue;
+            border-right: 2px solid @color-blue;
+            .css3(transform,rotate(45deg))
+          }
+        }
+      }
+
+    }
+  }
+}
+.right{
+  width:822px;
+  float:right;
+  .calender{
+    width:820px;
+    border:1px solid @color-border;
+    height:80px;
+    background:@color-white;
+    position: relative;
+    .con{
+      height:100%;
+      margin:0 24px;
+      overflow: hidden;
+      position: relative;
+      .wrapper{
+        .pos(@left:0,@top:0);
+        padding:5px 0;
+        a{
+          width:110px;
+          display: block;
+          float: left;
+          height:70px;
+          span{
+            display: block;
+            font-size: 16px;
+            text-align: center;
+            color:@color-gray;
+            line-height: 27px;
+            &.week{
+              padding-top:unit((70-27*2)/2,px);
+              color:lighten(@color-gray,40%); /*lighten变浅,darken颜色变深*/
+            }
+          }
+          &:hover,&.bg{
+            background:@color-blue-lite;
+            span{
+              color:@color-blue;
+            }
+          }
+        }
+      }
+    }
+    .btn{
+      width:24px;
+      height:100%;
+      i{
+        width:10px;
+        height:10px;
+        margin-top:-10px;
+        border-top:2px solid lighten(@color-gray,40%);
+      }
+      &.btnLeft{ /*.btn 且有类名.btnLeft，&在哪个{}里就代表谁*/
+        i{
+          .pos(@left:12px,@top:50%);
+          border-left:2px solid lighten(@color-gray,40%);
+          .css3(transform,rotate(-45deg));
+        }
+      }
+      &.btnRight{
+        i{
+          .pos(@right:12px,@top:50%);
+          border-right:2px solid lighten(@color-gray,40%);
+          .css3(transform,rotate(45deg));
+        }
+      }
+    }
+  }
+}
