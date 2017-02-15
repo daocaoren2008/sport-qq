@@ -14,13 +14,6 @@
     pro.queryUrlParameter = queryUrlParameter;
 })(String.prototype);
 
-//-->通过hash值定位元素
-function getLocation() {
-    var url = window.location.href;
-    var hash=url.subStr(url.lastIndexOf('#'))
-    // console.log(url.queryUrlParameter().HASH);
-}
-
 //控制mian部分的高度，menu的高度
 //innerHeight 相当于js中的clientHeight
 //outerHeight 相当于js中的offsetHeight;
@@ -53,8 +46,8 @@ function getLocation() {
  *
  * */
 var menuRender = (function () {
-    var $menuUl = $(".menu ul");
-
+    var $menuUl = $(".menu ul"),
+        $link=null;
     function bindHtml(data) {
         /*        var str = '';
          $.each(data, function (index, item) {
@@ -69,6 +62,23 @@ var menuRender = (function () {
 
         //把最终结果反倒ul中
         $menuUl.html(result);
+        $link = $menuUl.find("a");
+    }
+
+    //-->通过hash值定位元素
+    function getLocation() {
+        var url = window.location.href;
+        // console.log(url.queryUrlParameter().HASH);
+        var hash = url.substr(url.lastIndexOf('#'));
+        var $cur = $link.filter("[href='" + hash + "']");
+        $cur.length == 0 ? $cur = $link.eq(0) : null;
+        $cur.addClass("bg");
+    }
+//给所有A标签绑定点击事件
+    function bindA() {
+        $link.on("click",function(){
+            $(this).addClass('bg').parent().siblings().children('a').removeClass('bg');
+        })
     }
 
     return {
@@ -79,7 +89,10 @@ var menuRender = (function () {
                 dataType: 'json',
                 success: function (data) {
                     if (data && data.length > 0) {
+
                         bindHtml(data);
+                        getLocation();
+                        bindA();
                     }
                 }
             })
