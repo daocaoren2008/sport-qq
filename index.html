@@ -85,7 +85,7 @@
 <script src="js/ejs.min.js"></script>
 <!--设置模板结构-->
 <script type="text/template" charset="utf-8" id="menuTemplate">
-<% $.each(menuData,function(index,item){%>
+<%$.each(menuData,function(index,item){%>
 <li>
     <a href="#<%=item.hash%>" data-id="<%=item.columnId%>">
         <%=item.title%>
@@ -93,6 +93,16 @@
     </a>
 </li>
 <%})%>
+</script>
+<!--<% 和 %>必须在一行 -->
+<script type="text/template" charset="utf-8" id="calenderTemplate">
+    <!-- calenderData 要和js中render(calenderData)一致-->
+    <%$.each(calenderData,function(index,item){%>
+    <a href="##" data-time="<%=item.date%>">
+        <span class="week"><%=item.weekday%></span>
+        <span class="time" ><%=item.date.formatTime("{1}-{2}")%></span>
+    </a>
+    <%})%>
 </script>
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/iscroll-5.1.3.min.js"></script>

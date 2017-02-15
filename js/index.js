@@ -11,7 +11,19 @@
         }
     }
 
+
+    function formatTime(template) {
+        //template = "{1}-{2}"
+        template = template || "{0}年{1}月{2}日{3}时{4}分{5}秒";
+        var ary = this.match(/(\d+)/g);//["2016", "08", "28", "13", "34", "30"];
+        template = template.replace(/{(\d)}/g, function () {
+            return ary[arguments[1]];
+        });
+        return template;
+    }
+
     pro.queryUrlParameter = queryUrlParameter;
+    pro.formatTime = formatTime;
 })(String.prototype);
 
 //控制mian部分的高度，menu的高度
@@ -47,7 +59,9 @@
  * */
 var menuRender = (function () {
     var $menuUl = $(".menu ul"),
-        $link=null;
+        $link = null,
+        myScroll = null;
+
     function bindHtml(data) {
         /*        var str = '';
          $.each(data, function (index, item) {
@@ -65,6 +79,16 @@ var menuRender = (function () {
         $link = $menuUl.find("a");
     }
 
+    //局部滚动
+    function completeScroll() {
+        myScroll = new IScroll('.menu', {
+            scrollbars: true,//有滚动条
+            mouseWheel: true,//通过鼠标滚轮控制滚动效果
+            // fadeScrollbars:true,//滚动时显示滚动条，不滚动时消失
+            // bounce:false,//去掉反弹效果
+        })
+    }
+
     //-->通过hash值定位元素
     function getLocation() {
         var url = window.location.href;
@@ -73,11 +97,18 @@ var menuRender = (function () {
         var $cur = $link.filter("[href='" + hash + "']");
         $cur.length == 0 ? $cur = $link.eq(0) : null;
         $cur.addClass("bg");
+        /*滚动条定位到这个元素，第一个参数是js对象，不是jq对象，第二个参数是动画时间*/
+        myScroll.scrollToElement($cur[0], 300)
+        //获取当前赛事日期
+        calenderRender.init($cur.attr('data-id'));
     }
+
 //给所有A标签绑定点击事件
     function bindA() {
-        $link.on("click",function(){
+        $link.on("click", function () {
             $(this).addClass('bg').parent().siblings().children('a').removeClass('bg');
+            //获取到当前赛事的日期数据
+            calenderRender.init($(this).attr('data-id'));
         })
     }
 
@@ -89,8 +120,8 @@ var menuRender = (function () {
                 dataType: 'json',
                 success: function (data) {
                     if (data && data.length > 0) {
-
                         bindHtml(data);
+                        completeScroll();
                         getLocation();
                         bindA();
                     }
@@ -100,3 +131,107 @@ var menuRender = (function () {
     }
 })()
 menuRender.init();
+/*
+ * 跨域请求
+ * 跨域满足条件：协议、域名、端口号，只要一个不同，这属于跨域请求
+ * 一般情况下是通过jsonp来请求数据，jquery这边只需要把dataType设置成jsonp，这样则是跨域请求数据
+ *
+ * */
+var calenderRender = (function () {
+    var $wrapper = $(".calender .con .wrapper");
+
+    var $calenderPlan = $.Callbacks();//返回一个计划表
+    //在这个计划表里通过add/remove去添加或删除计划，通过ire()执行计划
+
+    //绑定数据
+    $calenderPlan.add(function (today, data) {
+        var calTemStr = $("#calenderTemplate").html();
+        // console.log(data);
+        var result = ejs.render(calTemStr, {calenderData: data});
+
+        $wrapper.html(result).css('width', data.length * 110);
+
+    });
+    $calenderPlan.add(function (today, data) {
+        today = today.replace(/-/g, '');
+        $link = $wrapper.children('a');
+        var $cur = $link.filter("[data-time='" + today + "']");
+        //如果没有和today想匹配的，选择和today日期往后最靠近的一天。
+        // console.log($cur.length);
+        if ($cur.length == 0) {
+            $link.each(function (index, item) {
+                var time = $(item).attr('data-time');
+                time = time.replace(/-/g, '');
+                if (time > today) {//这一项是今天日期往后靠近的一项
+                    $cur = $(item);
+                    return false;
+                }
+            });
+            //如果往后一个都没有则选中最后一项
+            if ($cur.length == 0) {
+                $cur = $link.eq($link.length - 1);
+            }
+        }
+        $cur.addClass('bg');
+        //把选中的这一项，移动到显示区域第一个位置
+        //选中的这一项需要向前移动的距离 = 索引 x 他的宽度
+        var maxL = 0, minL = 0;
+        minL = -($link.length - 7) * 110;//能移动的最小距离
+
+        var index = $cur.index();
+        var curL = -index * 110;
+        curL += 110 * 3;//再向后移动3个步长，居中
+
+        curL = curL > maxL ? maxL : (curL < minL ? minL : curL);//处理边界
+        //stop(),停止当前正在执行的动画，处理动画积累
+        $wrapper.stop().animate({left: curL}, 300)
+    })
+
+
+    /*    function bindHTML(today, data) {
+     var calenderStr = $("#calenderTemplate").html();
+     /!*把模板里的内容和数据交给ejs模板引擎渲染，最终返回拼接后的一个字符串*!/
+     var result = ejs.render(calenderStr, {calenderData: data});
+     /!*calenderData指的是返回的数据，必须html页面里面的模板里的一致*!/
+
+     //把最终结果反倒ul中
+     // console.log(result);
+
+     $wrapper.html(result);
+     /!*        $wrapper.children().each(function (index,item) {
+     if(today=item.dataset.date){
+     $(this).addClass('bg').siblings().removeClass('bg');
+     }
+     })*!/
+
+
+     }*/
+
+    return {
+
+        init: function (columnId) {
+            $.ajax({
+                url: 'http://matchweb.sports.qq.com/kbs/calendar?columnId=' + columnId,
+                method: 'GET',
+                dataType: 'jsonp',
+                success: function (result) {
+                    if (result && result.code == 0) {
+                        // console.log(result)
+                        var data = result.data,
+                            today = data.today;//今天日期
+                        data = data.data;//日期数组
+                        $calenderPlan.fire(today, data);
+                        //绑定数据
+                        // bindHTML(today, data);
+                        /*
+                         * 1、ejs绑定数据
+                         * 2、从所有日期中选中今天日期，如果没有找到，则选中今天日期往后的靠近的日期，如果往后的日期都没有，则选中最后的一个
+                         * 3、把选中日期移动显示区域的中间位置
+                         * 4、左右奇幻，切换完成后把显示区域的第一个元素张选中
+                         * */
+                    }
+                }
+            })
+        }
+    }
+})();
