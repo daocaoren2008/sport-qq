@@ -5,3 +5,10 @@ http://www.zhufengpeixun.com/qianduanjishuziliao/CSS3heHTML5zhuanti/2016-08-29/6
 
 less中有些css代码接卸不了，则避开这行代码，不要去解析还是当成css代码即可。
 例如 : filter:~“alpha(opacity=@{result})”，直接解析变量
+
+ejs模板引擎实现的步骤
+1、引入ejs.min.js。
+2、准备好从服务器端获取的数据，确定数据结构。
+3、根据数据结构，在HTML页面设置模板。
+4、在js中，获取模板里内容，把模板内容和获取的数据交给ejs处理，最终返回拼接好的字符串。
+5、把拼接玩的结构放置在想放的地方。

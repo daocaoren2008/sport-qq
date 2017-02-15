@@ -83,6 +83,17 @@
 </html>
 <!--ejs模板引擎-->
 <script src="js/ejs.min.js"></script>
+<!--设置模板结构-->
+<script type="text/template" charset="utf-8" id="menuTemplate">
+<% $.each(menuData,function(index,item){%>
+<li>
+    <a href="#<%=item.hash%>" data-id="<%=item.columnId%>">
+        <%=item.title%>
+        <i></i>
+    </a>
+</li>
+<%})%>
+</script>
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/iscroll-5.1.3.min.js"></script>
 <script src="js/index.js"></script>
